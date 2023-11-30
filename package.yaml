@@ -21,6 +21,14 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- containers
+- transformers
+- fgl
+- MemoTrie
+- heap
+- hashable
+- unordered-containers
+- astar
 
 ghc-options:
 - -Wall
@@ -32,9 +40,15 @@ ghc-options:
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
+- -Wno-orphans
 
 library:
   source-dirs: src
+
+_day: &day
+  source-dirs: app
+  other-modules: []
+  dependencies: [aoc]
 
 executables:
   aoc-exe:
@@ -46,6 +60,10 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - aoc
+
+  d00:
+    <<: *day
+    main: d00.hs
 
 tests:
   aoc-test:
