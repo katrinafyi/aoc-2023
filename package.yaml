@@ -65,6 +65,107 @@ executables:
     <<: *day
     main: d00.hs
 
+  d01:
+    <<: *day
+    main: d01.hs
+
+  d02:
+    <<: *day
+    main: d02.hs
+
+  d03:
+    <<: *day
+    main: d03.hs
+
+  d04:
+    <<: *day
+    main: d04.hs
+
+  d05:
+    <<: *day
+    main: d05.hs
+
+  d06:
+    <<: *day
+    main: d06.hs
+
+  d07:
+    <<: *day
+    main: d07.hs
+
+  d08:
+    <<: *day
+    main: d08.hs
+
+  d09:
+    <<: *day
+    main: d09.hs
+
+  d10:
+    <<: *day
+    main: d10.hs
+
+  d11:
+    <<: *day
+    main: d11.hs
+
+  d12:
+    <<: *day
+    main: d12.hs
+
+  d13:
+    <<: *day
+    main: d13.hs
+
+  d14:
+    <<: *day
+    main: d14.hs
+
+  d15:
+    <<: *day
+    main: d15.hs
+
+  d16:
+    <<: *day
+    main: d16.hs
+
+  d17:
+    <<: *day
+    main: d17.hs
+
+  d18:
+    <<: *day
+    main: d18.hs
+
+  d19:
+    <<: *day
+    main: d19.hs
+
+  d20:
+    <<: *day
+    main: d20.hs
+
+  d21:
+    <<: *day
+    main: d21.hs
+
+  d22:
+    <<: *day
+    main: d22.hs
+
+  d23:
+    <<: *day
+    main: d23.hs
+
+  d24:
+    <<: *day
+    main: d24.hs
+
+  d25:
+    <<: *day
+    main: d25.hs
+
+
 tests:
   aoc-test:
     main:                Spec.hs
