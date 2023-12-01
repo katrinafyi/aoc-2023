@@ -25,12 +25,6 @@ import GHC.Stack (HasCallStack)
 import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
 
-data LR = L | R deriving (Eq, Show, Read)
-
-data Move = Move LR Integer deriving (Eq, Show, Read)
-
-rot L = rotateLeft
-rot R = rotateRight
 
 repls :: [(T.Text, Int)]
 repls =
