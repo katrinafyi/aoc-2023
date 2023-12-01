@@ -1,7 +1,9 @@
 module AocLib where
 
+import Data.Either
 import Data.Char
 import Data.List
+import qualified Data.Set as Set
 import Data.Functor
 import Data.Function
 import Control.Monad
@@ -22,7 +24,7 @@ chunks n xs =
 -- All returned lists are the requested size. Input elements might be omitted.
 sliding :: Int -> [a] -> [[a]]
 sliding _ [] = []
-sliding n (x:xs) 
+sliding n (x:xs)
   | length front == n = front : sliding n xs
   | otherwise = []
   where front = take n (x:xs)
@@ -34,23 +36,23 @@ sliding2 _ = []
 
 groupIf :: (a -> Bool) -> [a] -> [[a]]
 groupIf f = go . dropWhile nf
-  where 
+  where
     nf = not . f
     go [] = []
     go xs = yes : go (dropWhile nf no)
       where (yes,no) = span f xs
 
-lstrip :: String -> String 
+lstrip :: String -> String
 lstrip = dropWhile isSpace
 
-isEmpty :: String -> Bool 
+isEmpty :: String -> Bool
 isEmpty = null . lstrip
 
 paragraphs :: [String] -> [[String]]
 paragraphs = groupIf (not . isEmpty)
 
 splitBy :: (a -> Bool) -> [a] -> [[a]]
-splitBy p s = 
+splitBy p s =
   case dropWhile p s of
     [] -> []
     s' -> w : splitBy p s''
@@ -58,17 +60,24 @@ splitBy p s =
 
 split :: Eq a => a -> [a] -> [[a]]
 split x = splitBy (== x)
-  
-take2 :: [a] -> (a,a)
-take2 [x,y] = (x,y)
-take2 _ = error "required two elements"
 
-take3 :: [a] -> (a,a,a)
-take3 [x,y,z] = (x,y,z)
-take3 _ = error "required two elements"
+exactly2 :: [a] -> (a,a)
+exactly2 [x,y] = (x,y)
+exactly2 _ = error "required two elements"
+
+exactly3 :: [a] -> (a,a,a)
+exactly3 [x,y,z] = (x,y,z)
+exactly3 _ = error "required two elements"
+
+fst3 :: (a,b,c) -> a
+fst3 (a,b,c) = a
+snd3 :: (a,b,c) -> b
+snd3 (a,b,c) = b
+thd3 :: (a,b,c) -> c
+thd3 (a,b,c) = c
 
 tweak :: (a -> a) -> [a] -> [a]
-tweak _ [] = [] 
+tweak _ [] = []
 tweak f (x:xs) = f x : xs
 
 indexed :: (Num n, Enum n) => [a] -> [(n,a)]
@@ -82,7 +91,8 @@ indexed2 = fmap go . indexed
 minmax :: (Ord a, Foldable t) => t a -> (a,a)
 minmax x = (minimum x, maximum x)
 
-instance (Num a, Num b) => Num (a,b) where 
+-- | 2-vector. Conventionally, +x is to right and +y is down.
+instance (Num a, Num b) => Num (a,b) where
   (x,y) + (a,b) = (x+a,y+b)
   (x,y) - (a,b) = (x-a,y-b)
   (x,y) * (a,b) = (x*a,y*b)
@@ -90,7 +100,11 @@ instance (Num a, Num b) => Num (a,b) where
   signum (x,y) = (signum x, signum y)
   fromInteger x = (fromInteger x,fromInteger x)
 
-instance (Num a, Num b, Num c) => Num (a,b,c) where 
+type Vec2 = (Integer, Integer)
+rotateLeft (x,y) = (y,-x)
+rotateRight (x,y) = (-y,x)
+
+instance (Num a, Num b, Num c) => Num (a,b,c) where
   (x,y,z) + (a,b,c) = (x+a,y+b,z+c)
   (x,y,z) - (a,b,c) = (x-a,y-b,z-c)
   (x,y,z) * (a,b,c) = (x*a,y*b,z*c)
@@ -101,11 +115,11 @@ instance (Num a, Num b, Num c) => Num (a,b,c) where
 manhattan :: Num a => (a,a) -> a
 manhattan (x,y) = abs x + abs y
 
-uinteger :: ReadP Integer 
+uinteger :: ReadP Integer
 uinteger = read <$> munch1 isDigit
 
-integer :: ReadP Integer 
-integer = do 
+integer :: ReadP Integer
+integer = do
   sign <- option 1 (char '-' $> (-1))
   (* sign) <$> uinteger
 
@@ -113,19 +127,19 @@ uint :: ReadP Int
 uint = read <$> munch1 isDigit
 
 int :: ReadP Int
-int = do 
+int = do
   sign <- option id (char '-' $> negate)
   sign <$> uint
 
 ints :: String -> [Int]
 ints = fmap read . filter (digit . head) . groupBy ((==) `on` digit)
-  where 
+  where
     digit x = isDigit x || x `elem` "+-"
 
 uints :: String -> [Int]
 uints = fmap read . filter (isDigit . head) . groupBy ((==) `on` isDigit)
 
-line :: ReadP String 
+line :: ReadP String
 line = munch (/= '\n')
 
 line' = line <* char '\n'
@@ -136,22 +150,29 @@ eitherA a b = (Left <$> a) <|> (Right <$> b)
 iterateM :: Monad m => Int -> (a -> m a) -> a -> m a
 iterateM n f x = foldM (&) x (replicate n f)
 
-fixM :: Monad m => (a -> m a) -> a -> m a 
+fixM :: Monad m => (a -> m a) -> a -> m a
 fixM f = fix (f >=>)
+
+firstDupe :: Ord a => Foldable t => t a -> Maybe a
+firstDupe xs = either Just (const Nothing) $ foldM go Set.empty xs
+  where
+    go seen x
+      | x `Set.member` seen = Left x
+      | otherwise = Right (Set.insert x seen)
 
 
 mode :: [Int] -> Int
 mode = snd . maximum . map (length &&& head) . group . sort
 
-readp :: Show a => ReadP a -> String -> a 
-readp p s = case readP_to_S (p <* skipSpaces <* eof) s of 
+readp :: Show a => ReadP a -> String -> a
+readp p s = case readP_to_S (p <* skipSpaces <* eof) s of
   [(x,[])] -> x
   [] -> error "readp error: no successful parse"
   x -> error $ "readp error: ambiguous parse " ++ show x
 
-runGraph :: (G.DynGraph g, Ord a) => 
+runGraph :: (G.DynGraph g, Ord a) =>
   G.NodeMapM a b g r -> (g a b, a -> G.Node)
 runGraph maker = (g, node)
-  where 
+  where
     (_,(map,g)) = G.run G.empty maker
     node = fst . G.mkNode_ map
