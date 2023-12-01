@@ -29,6 +29,7 @@ dependencies:
 - hashable
 - unordered-containers
 - astar
+- text
 
 ghc-options:
 - -Wall
