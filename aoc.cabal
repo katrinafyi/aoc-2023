@@ -564,6 +564,25 @@ executable d25
     , unordered-containers
   default-language: Haskell2010
 
+executable y2019d24
+  main-is: y2019d24.hs
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
+  build-depends:
+      MemoTrie
+    , aoc
+    , astar
+    , base >=4.7 && <5
+    , containers
+    , fgl
+    , hashable
+    , heap
+    , text
+    , transformers
+    , unordered-containers
+  default-language: Haskell2010
+
 test-suite aoc-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs

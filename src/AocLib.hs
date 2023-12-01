@@ -83,7 +83,8 @@ tweak f (x:xs) = f x : xs
 indexed :: (Num n, Enum n) => [a] -> [(n,a)]
 indexed = zip [0..]
 
-indexed2 :: [[a]] -> [[((Int,Int),a)]]
+-- | row col
+indexed2 :: (Num n, Enum n) => [[a]] -> [[((n,n),a)]]
 indexed2 = fmap go . indexed
   where
     go (r,row) = (\(c,x) -> ((r,c),x)) <$> indexed row
@@ -103,6 +104,15 @@ instance (Num a, Num b) => Num (a,b) where
 type Vec2 = (Integer, Integer)
 rotateLeft (x,y) = (y,-x)
 rotateRight (x,y) = (-y,x)
+
+direction4 :: Num n => [(n, n)]
+direction4 = [(0,1),(0,-1),(1,0),(-1,0)]
+
+direction8 :: Num n => [(n, n)]
+direction8 = direction4 ++ [(1,1),(1,-1),(-1,1),(-1,-1)]
+
+adjacent4 pos = (+ pos) <$> direction4
+adjacent8 pos = (+ pos) <$> direction8
 
 instance (Num a, Num b, Num c) => Num (a,b,c) where
   (x,y,z) + (a,b,c) = (x+a,y+b,z+c)

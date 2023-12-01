@@ -166,6 +166,10 @@ executables:
     <<: *day
     main: d25.hs
 
+  y2019d24:
+    <<: *day
+    main: y2019d24.hs
+
 
 tests:
   aoc-test:
