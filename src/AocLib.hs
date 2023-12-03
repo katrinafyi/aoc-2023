@@ -34,8 +34,9 @@ sliding2 :: [a] -> [(a, a)]
 sliding2 (x:y:xs) = (x,y) : sliding2 (y:xs)
 sliding2 _ = []
 
-groupIf :: (a -> Bool) -> [a] -> [[a]]
-groupIf f = go . dropWhile nf
+-- | Filters the given list according to the predicate, grouping adjacent 'true' values together.
+filterAndGroup :: (a -> Bool) -> [a] -> [[a]]
+filterAndGroup f = go . dropWhile nf
   where
     nf = not . f
     go [] = []
@@ -49,7 +50,7 @@ isEmpty :: String -> Bool
 isEmpty = null . lstrip
 
 paragraphs :: [String] -> [[String]]
-paragraphs = groupIf (not . isEmpty)
+paragraphs = filterAndGroup (not . isEmpty)
 
 splitBy :: (a -> Bool) -> [a] -> [[a]]
 splitBy p s =
@@ -169,6 +170,9 @@ firstDupe xs = either Just (const Nothing) $ foldM go Set.empty xs
     go seen x
       | x `Set.member` seen = Left x
       | otherwise = Right (Set.insert x seen)
+
+uniquify :: Ord a => [a] -> [a]
+uniquify = Set.toList . Set.fromList
 
 
 mode :: [Int] -> Int
