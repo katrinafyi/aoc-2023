@@ -1,2 +1,4 @@
 .stack-work/
 *~
+/aoc
+/aoc-*.tar.gz

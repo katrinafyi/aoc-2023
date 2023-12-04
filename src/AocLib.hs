@@ -15,6 +15,9 @@ import Control.Applicative
 import Text.ParserCombinators.ReadP
 import qualified Data.Graph.Inductive as G
 
+mapKeyed :: (a -> b) -> [a] -> [(a,b)]
+mapKeyed f = fmap (\x -> (x, f x))
+
 -- | Splits the given list into non-overlapping chunks of the given size.
 -- The final list might be shorter if the length is not a multiple.
 chunks :: Int -> [a] -> [[a]]

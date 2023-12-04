@@ -48,10 +48,10 @@ two inp = sum $ foldl' (>>>) id (fmap go (tails inp)) state0
     state0 = Map.fromList $ fmap (,1) $ inp
 
     go :: [Data] -> S -> S
-    go (b:bs) st = foldl' (\m game -> Map.adjust adjust game m) st newCards
+    go (b:bs) st = Map.unionWith (+) st adjust
       where
-        adjust = (+ (st Map.! b))
-        newCards = genericTake (gameMatches b) bs
+        n = st ! b
+        adjust = Map.fromList $ map (,n) $ genericTake (gameMatches b) bs
     go [] x = x
 
 main :: (HasCallStack) => IO ()
