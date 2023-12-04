@@ -1,10 +1,12 @@
 module AocLib where
 
+import Data.Maybe
 import Data.Either
 import Data.Char
 import Data.List
 import qualified Data.Set as Set
 import qualified Data.Map as Map
+import qualified Data.Text as T
 import Data.Functor
 import Data.Function
 import Control.Monad
@@ -150,6 +152,19 @@ ints = fmap read . filter (digit . head) . groupBy ((==) `on` digit)
 
 uints :: String -> [Int]
 uints = fmap read . filter (isDigit . head) . groupBy ((==) `on` isDigit)
+
+readT :: Read a => T.Text -> a
+readT = read . T.unpack
+
+intsT :: Read n => T.Text -> [n]
+intsT = fmap readT . filter (maybe False (isPMDigit . fst) . T.uncons) . T.groupBy ((==) `on` isPMDigit)
+  where
+    isPMDigit x = isDigit x || x `elem` "+-"
+
+uintsT :: Read n => T.Text -> [n]
+uintsT = fmap readT . filter (maybe False (isPMDigit . fst) . T.uncons) . T.groupBy ((==) `on` isPMDigit)
+  where
+    isPMDigit = isDigit 
 
 line :: ReadP String
 line = munch (/= '\n')

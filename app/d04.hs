@@ -27,19 +27,14 @@ import GHC.Stack (HasCallStack)
 import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
 
-data Data = Data { gameId :: Int, gameNeed :: [Int], gameHave :: [Int], gameMatches :: Integer } deriving (Eq, Ord)
+data Data = Data { gameId :: Int, gameNeed :: [Int], gameHave :: [Int], gameMatches :: Integer } deriving (Eq, Ord, Show)
 
-instance (Show Data) where
-  show (Data i _ _ _) = "G " ++ show i
-
-parse raw = fmap go $ fmap ints $ lines raw
+parse raw = fmap line . T.lines . T.pack $ raw
   where
-    -- count of winning numbers
-    size = subtract 1 $ length $ ints $ takeWhile (/= '|') $ head $ lines raw
-    go xs = Data (head xs) need have (genericLength $ need `intersect` have)
-      where
-        need = take size $ tail xs
-        have = drop (size + 1) xs
+    line = make . bimap lhs rhs . T.breakOn ": "
+    lhs = head . uintsT
+    rhs = bimap uintsT uintsT . T.breakOn " | "
+    make (n,(need,have)) = Data n need have (genericLength $ need `intersect` have)
 
 one :: [Data] -> Integer
 one inp = sum $ fmap go $ fmap gameMatches inp
@@ -49,7 +44,6 @@ one inp = sum $ fmap go $ fmap gameMatches inp
 type S = Map Data Integer
 
 two inp = sum $ foldl' (>>>) id (fmap go (tails inp)) state0
-  --go (tail inp) $ go inp state0
   where
     state0 = Map.fromList $ fmap (,1) $ inp
 
