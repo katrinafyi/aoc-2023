@@ -4,6 +4,7 @@ import Data.Either
 import Data.Char
 import Data.List
 import qualified Data.Set as Set
+import qualified Data.Map as Map
 import Data.Functor
 import Data.Function
 import Control.Monad
@@ -174,9 +175,11 @@ firstDupe xs = either Just (const Nothing) $ foldM go Set.empty xs
 uniquify :: Ord a => [a] -> [a]
 uniquify = Set.toList . Set.fromList
 
-
 mode :: [Int] -> Int
 mode = snd . maximum . map (length &&& head) . group . sort
+
+filterKeys :: (k -> Bool) -> Map.Map k v -> Map.Map k v
+filterKeys p = Map.filterWithKey (const . p)
 
 readp :: Show a => ReadP a -> String -> a
 readp p s = case readP_to_S (p <* skipSpaces <* eof) s of
