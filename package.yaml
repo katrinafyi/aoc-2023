@@ -32,6 +32,7 @@ dependencies:
 - text
 
 ghc-options:
+- -O3
 - -Wall
 - -Wcompat
 - -Widentities

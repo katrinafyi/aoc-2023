@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 module AocLib where
 
 import Data.Maybe
@@ -14,6 +15,7 @@ import Control.Arrow
 import Control.Applicative
 import Text.ParserCombinators.ReadP
 import qualified Data.Graph.Inductive as G
+import Data.String (IsString (..))
 
 mapKeyed :: (a -> b) -> [a] -> [(a,b)]
 mapKeyed f = fmap (\x -> (x, f x))
@@ -177,11 +179,16 @@ line' = line <* char '\n'
 eitherA :: Alternative f => f a -> f b -> f (Either a b)
 eitherA a b = (Left <$> a) <|> (Right <$> b)
 
-iterateM :: Monad m => Int -> (a -> m a) -> a -> m a
-iterateM n f x = foldM (&) x (replicate n f)
+-- iterateM :: Monad m => Int -> (a -> m a) -> a -> m a
+-- iterateM n f x = foldM (&) x (replicate n f)
 
 fixM :: Monad m => (a -> m a) -> a -> m a
 fixM f = fix (f >=>)
+
+iterateM :: Monad m => (a -> m a) -> a -> [m a]
+iterateM f x = go f (pure x)
+  where 
+    go f ma = ma : go f (ma >>= f)
 
 firstDupe :: Ord a => Foldable t => t a -> Maybe a
 firstDupe xs = either Just (const Nothing) $ foldM go Set.empty xs
@@ -199,11 +206,14 @@ mode = snd . maximum . map (length &&& head) . group . sort
 filterKeys :: (k -> Bool) -> Map.Map k v -> Map.Map k v
 filterKeys p = Map.filterWithKey (const . p)
 
-readp :: Show a => ReadP a -> String -> a
+readp :: ReadP a -> String -> a
 readp p s = case readP_to_S (p <* skipSpaces <* eof) s of
   [(x,[])] -> x
   [] -> error "readp error: no successful parse"
-  x -> error $ "readp error: ambiguous parse " ++ show x
+  x -> error $ "readp error: ambiguous parse"
+
+-- instance IsString (ReadP String) where
+--   fromString = string
 
 runGraph :: (G.DynGraph g, Ord a) =>
   G.NodeMapM a b g r -> (g a b, a -> G.Node)
