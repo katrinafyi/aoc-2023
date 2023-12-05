@@ -44,13 +44,14 @@ intervalUpdate k (low, len) m
   where
     (src0,dest0) = fromMaybe (error "interval not in map") $ Map.lookupLE (k + len - 1) m
 
-intervalImage m (k,len) = front ++ intervals
+intervalImage m (k,len) = intervals
   where
-    v = intervalLookup k m
-    between = Map.insert k v $ fst $ Map.split (k+len) $ snd $ Map.split k m
-    intervals = fmap (\((k1,v1),(k2,_)) -> (v1, k2-k1)) $ sliding2 $ Map.toList between
-    len' = sum $ fmap snd intervals
-    front = guard (len' < len) $> (snd (Map.findMax between), len - len')
+    ends = Map.fromList [(k+len, -100000), (k,intervalLookup k m)]
+    between = fst $ Map.split (k+len) $ snd $ Map.split k m
+    together = ends `Map.union` between
+
+    intervals = fmap interval $ sliding2 $ Map.toList together
+    interval ((k1,v1), (k2,_)) = (v1, k2-k1)
 
 parse raw =
   -- Map.fromList maps
@@ -67,11 +68,14 @@ parsep = do
     pure $ intervalUpdate low1 (low2, len)
   pure (from, (to, foldr' ($) (Map.singleton 0 0) fns))
 
-seedLocation (Data seeds maps) interval = fromLeft undefined $ fixM (uncurry go) ("seed", [interval])
+seedLocation (Data seeds maps) interval = foldM (flip intervalImage) interval maps' 
   where
-    go "location" is = Left is
-    go kind is = Right (fst m, concatMap (intervalImage (snd m)) is)
-      where m = maps ! kind
+    names = unfoldr go "seed"
+    go "location" = Nothing
+    go kind = Just (kind, fst $ maps ! kind)
+
+    maps' = fmap snd $ fmap (maps !) names
+    
 
 one d = minimum $ concatMap (seedLocation d . interval) (seeds d)
   where interval x = (x,1)

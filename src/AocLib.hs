@@ -17,6 +17,9 @@ import Text.ParserCombinators.ReadP
 import qualified Data.Graph.Inductive as G
 import Data.String (IsString (..))
 
+dupe :: b -> (b, b)
+dupe x = (x,x)
+
 mapKeyed :: (a -> b) -> [a] -> [(a,b)]
 mapKeyed f = fmap (\x -> (x, f x))
 
