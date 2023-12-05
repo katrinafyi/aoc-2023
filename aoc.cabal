@@ -35,13 +35,15 @@ library
       src
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , astar
     , base >=4.7 && <5
     , containers
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -57,7 +59,8 @@ executable aoc-exe
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -65,6 +68,7 @@ executable aoc-exe
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -76,7 +80,8 @@ executable d00
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -84,6 +89,7 @@ executable d00
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -95,7 +101,8 @@ executable d01
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -103,6 +110,7 @@ executable d01
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -114,7 +122,8 @@ executable d02
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -122,6 +131,7 @@ executable d02
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -133,7 +143,8 @@ executable d03
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -141,6 +152,7 @@ executable d03
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -152,7 +164,8 @@ executable d04
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -160,6 +173,7 @@ executable d04
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -171,7 +185,8 @@ executable d05
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -179,6 +194,7 @@ executable d05
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -190,7 +206,8 @@ executable d06
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -198,6 +215,7 @@ executable d06
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -209,7 +227,8 @@ executable d07
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -217,6 +236,7 @@ executable d07
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -228,7 +248,8 @@ executable d08
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -236,6 +257,7 @@ executable d08
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -247,7 +269,8 @@ executable d09
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -255,6 +278,7 @@ executable d09
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -266,7 +290,8 @@ executable d10
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -274,6 +299,7 @@ executable d10
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -285,7 +311,8 @@ executable d11
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -293,6 +320,7 @@ executable d11
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -304,7 +332,8 @@ executable d12
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -312,6 +341,7 @@ executable d12
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -323,7 +353,8 @@ executable d13
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -331,6 +362,7 @@ executable d13
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -342,7 +374,8 @@ executable d14
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -350,6 +383,7 @@ executable d14
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -361,7 +395,8 @@ executable d15
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -369,6 +404,7 @@ executable d15
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -380,7 +416,8 @@ executable d16
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -388,6 +425,7 @@ executable d16
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -399,7 +437,8 @@ executable d17
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -407,6 +446,7 @@ executable d17
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -418,7 +458,8 @@ executable d18
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -426,6 +467,7 @@ executable d18
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -437,7 +479,8 @@ executable d19
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -445,6 +488,7 @@ executable d19
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -456,7 +500,8 @@ executable d20
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -464,6 +509,7 @@ executable d20
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -475,7 +521,8 @@ executable d21
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -483,6 +530,7 @@ executable d21
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -494,7 +542,8 @@ executable d22
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -502,6 +551,7 @@ executable d22
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -513,7 +563,8 @@ executable d23
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -521,6 +572,7 @@ executable d23
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -532,7 +584,8 @@ executable d24
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -540,6 +593,7 @@ executable d24
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -551,7 +605,8 @@ executable d25
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -559,6 +614,7 @@ executable d25
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -570,7 +626,8 @@ executable y2019d24
       app
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -578,6 +635,7 @@ executable y2019d24
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers
@@ -594,7 +652,8 @@ test-suite aoc-test
       test
   ghc-options: -O3 -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wno-orphans -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      MemoTrie
+      IntervalMap
+    , MemoTrie
     , aoc
     , astar
     , base >=4.7 && <5
@@ -602,6 +661,7 @@ test-suite aoc-test
     , fgl
     , hashable
     , heap
+    , parallel
     , text
     , transformers
     , unordered-containers

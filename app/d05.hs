@@ -26,8 +26,10 @@ import Debug.Trace
 import GHC.Stack (HasCallStack)
 import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
+import Data.IntervalMap (IntervalMap, Interval (..))
+import qualified Data.IntervalMap.Strict as IvMap
 
-data Data = Data { seeds :: [Integer], maps :: Map T.Text (T.Text, Map Integer Integer) } deriving (Eq, Show)
+data Data = Data { seeds :: [Integer], maps :: Map T.Text (T.Text, IntervalMap Integer (Interval Integer)) } deriving (Eq, Show)
 -- instance Show Data where
 --   show (Data seeds maps) = "Data \n  " ++ show seeds ++ "\n  " ++ show (Map.map fst maps)
 
@@ -53,36 +55,37 @@ intervalImage m (k,len) = intervals
     intervals = fmap interval $ sliding2 $ Map.toList together
     interval ((k1,v1), (k2,_)) = (v1, k2-k1)
 
-parse raw =
-  -- Map.fromList maps
-  Data (fmap fromIntegral $ uints $ head ls) (Map.fromList maps)
+parse raw = Data (fmap fromIntegral $ uints $ head ls) (Map.fromList maps)
   where
     ls = lines raw
     maps = readp (P.sepBy parsep $ P.string "\n\n") $ unlines $ drop 2 ls
+
+interval low len = IntervalCO low (low + len)
 
 parsep = do
   h <- T.pack <$> line'
   let [from,to] = T.splitOn "-to-" $ fst $ T.breakOn " " h
   fns <- flip P.sepBy (P.char '\n') $ do
     [low2, low1, len] <- uinteger `P.sepBy` P.char ' '
-    pure $ intervalUpdate low1 (low2, len)
-  pure (from, (to, foldr' ($) (Map.singleton 0 0) fns))
+    pure $ IvMap.insert (interval low1 len) (interval low2 len)
+  pure (from, (to, foldr' ($) IvMap.empty fns))
 
-seedLocation (Data seeds maps) interval = foldM (flip intervalImage) interval maps' 
+seedLocation (Data seeds maps) iv = foldM (flip go') iv maps'
   where
     names = unfoldr go "seed"
     go "location" = Nothing
     go kind = Just (kind, fst $ maps ! kind)
 
     maps' = fmap snd $ fmap (maps !) names
-    
+    go' m = IvMap.elems . IvMap.intersecting m
 
-one d = minimum $ concatMap (seedLocation d . interval) (seeds d)
-  where interval x = (x,1)
+
+one d = minimum $ concatMap (seedLocation d . make) (seeds d)
+  where make x = interval x 1
 
 two d = minimum $ concatMap (seedLocation d) seeds'
   where
-    seeds' = fmap (\[x,y] -> (x,y)) $ chunks 2 $ seeds d
+    seeds' = fmap (\[x,y] -> interval x y) $ chunks 2 $ seeds d
 
 main :: (HasCallStack) => IO ()
 main = do

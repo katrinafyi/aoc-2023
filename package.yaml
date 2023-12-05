@@ -30,6 +30,8 @@ dependencies:
 - unordered-containers
 - astar
 - text
+- parallel
+- IntervalMap
 
 ghc-options:
 - -O3
