@@ -32,7 +32,7 @@ data Game = Game { gameId :: Integer, gameTurns :: [Turn] } deriving (Eq, Show, 
 
 parse = parsep
 
-parsep = readp (P.sepBy parser (P.char '\n'))
+parsep = readp (P.sepBy parser "\n")
 
 parsergb 'r' = pure $ ZipList [1,0,0]
 parsergb 'g' = pure $ ZipList [0,1,0]
@@ -40,13 +40,10 @@ parsergb 'b' = pure $ ZipList [0,0,1]
 parsergb _ = empty
 
 parser = do
-  P.string "Game "
-  i <- uinteger
-  P.string ": "
-  a <- flip P.sepBy (P.string "; ") $ do
-    nums <- flip P.sepBy (P.string ", ") $ do
-      x <- uinteger
-      P.char ' '
+  i <- "Game " *> uinteger <* ": "
+  a <- flip P.sepBy "; " $ do
+    nums <- flip P.sepBy ", " $ do
+      x <- uinteger <* " "
       s <- P.munch isLetter
       let c = head s
       fmap (x *) <$> parsergb c

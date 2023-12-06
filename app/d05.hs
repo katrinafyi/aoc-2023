@@ -58,13 +58,13 @@ parse raw =
   Data (fmap fromIntegral $ uints $ head ls) (Map.fromList maps)
   where
     ls = lines raw
-    maps = readp (P.sepBy parsep $ P.string "\n\n") $ unlines $ drop 2 ls
+    maps = readp (P.sepBy parsep "\n\n") $ unlines $ drop 2 ls
 
 parsep = do
   h <- T.pack <$> line'
   let [from,to] = T.splitOn "-to-" $ fst $ T.breakOn " " h
-  fns <- flip P.sepBy (P.char '\n') $ do
-    [low2, low1, len] <- uinteger `P.sepBy` P.char ' '
+  fns <- flip P.sepBy "\n" $ do
+    [low2, low1, len] <- uinteger `P.sepBy` " "
     pure $ intervalUpdate low1 (low2, len)
   pure (from, (to, foldr' ($) (Map.singleton 0 0) fns))
 

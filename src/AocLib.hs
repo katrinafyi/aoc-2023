@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeOperators #-}
 module AocLib where
 
 import Data.Maybe
@@ -215,8 +215,8 @@ readp p s = case readP_to_S (p <* skipSpaces <* eof) s of
   [] -> error "readp error: no successful parse"
   x -> error $ "readp error: ambiguous parse"
 
--- instance IsString (ReadP String) where
---   fromString = string
+instance a ~ String => IsString (ReadP a) where
+  fromString = string
 
 runGraph :: (G.DynGraph g, Ord a) =>
   G.NodeMapM a b g r -> (g a b, a -> G.Node)

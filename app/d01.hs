@@ -49,7 +49,7 @@ parse raw = fmap T.pack $ lines raw
 
 parsep = readp parser
 
-parser = P.sepBy (integer) (P.char ' ')
+parser = P.sepBy (integer) " "
 
 one inp =
   sum $
