@@ -13,6 +13,7 @@ import Data.Functor
 import Data.List
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
+import qualified Data.Map.Merge.Strict as Map
 import Data.Maybe
 import Data.Sequence (Seq ((:<|)), (<|), (><), (|>))
 import qualified Data.Sequence as Seq
@@ -49,11 +50,13 @@ parser = do
 
 type Count = Map Colour Int
 
-one inp = sum $ fmap gameId $ filter (all sat . gameTurns) inp
+zipWithMap f = Map.merge Map.dropMissing Map.dropMissing $ Map.zipWithMatched (const f)
+
+one inp = sum $ fmap gameId $ filter (sat . gameTurns) inp
   where
-    sat d = g R <= 12 && g G <= 13 && g B <= 14
-      where
-        g k = Map.findWithDefault 0 k d
+    bound = Map.fromList [(R,12),(G,13),(B,14)]
+    sat ms = and $ Map.elems $ zipWithMap (<=) m bound
+      where m = Map.unionsWith max ms
 
 two :: [Game] -> Integer
 two inp = sum $ fmap (product . Map.elems) $ fmap needed inp
