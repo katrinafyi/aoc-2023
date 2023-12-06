@@ -47,12 +47,7 @@ sliding2 _ = []
 
 -- | Filters the given list according to the predicate, grouping adjacent 'true' values together.
 filterAndGroup :: (a -> Bool) -> [a] -> [[a]]
-filterAndGroup f = go . dropWhile nf
-  where
-    nf = not . f
-    go [] = []
-    go xs = yes : go (dropWhile nf no)
-      where (yes,no) = span f xs
+filterAndGroup f = splitBy (not . f)
 
 lstrip :: String -> String
 lstrip = dropWhile isSpace
@@ -79,7 +74,7 @@ exactly2 _ = error "required two elements"
 
 exactly3 :: [a] -> (a,a,a)
 exactly3 [x,y,z] = (x,y,z)
-exactly3 _ = error "required two elements"
+exactly3 _ = error "required three elements"
 
 fst3 :: (a,b,c) -> a
 fst3 (a,b,c) = a
@@ -154,25 +149,23 @@ int = do
   sign <$> uint
 
 ints :: String -> [Int]
-ints = fmap read . filter (digit . head) . groupBy ((==) `on` digit)
+ints = fmap read . filterAndGroup digit
   where
     digit x = isDigit x || x `elem` "+-"
 
 uints :: String -> [Int]
-uints = fmap read . filter (isDigit . head) . groupBy ((==) `on` isDigit)
+uints = fmap read . filterAndGroup isDigit
 
 readT :: Read a => T.Text -> a
 readT = read . T.unpack
 
 intsT :: Read n => T.Text -> [n]
-intsT = fmap readT . filter (maybe False (isPMDigit . fst) . T.uncons) . T.groupBy ((==) `on` isPMDigit)
+intsT = fmap readT . filter (not . T.null) . T.split (not . isPMDigit)
   where
     isPMDigit x = isDigit x || x `elem` "+-"
 
 uintsT :: Read n => T.Text -> [n]
-uintsT = fmap readT . filter (maybe False (isPMDigit . fst) . T.uncons) . T.groupBy ((==) `on` isPMDigit)
-  where
-    isPMDigit = isDigit 
+uintsT = fmap readT . filter (not . T.null) . T.split (not . isDigit)
 
 line :: ReadP String
 line = munch (/= '\n')
