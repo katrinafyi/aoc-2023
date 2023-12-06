@@ -25,43 +25,46 @@ import Debug.Trace
 import GHC.Stack (HasCallStack)
 import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
+import Data.Coerce (coerce)
 
-
-data Colour = R | G | B deriving (Eq, Show, Read, Ord)
-type Turn = Map Colour Integer
+type Turn = ZipList Integer
 data Game = Game { gameId :: Integer, gameTurns :: [Turn] } deriving (Eq, Show, Read)
 
 parse = parsep
 
 parsep = readp (P.sepBy parser (P.char '\n'))
 
+parsergb 'r' = pure $ ZipList [1,0,0]
+parsergb 'g' = pure $ ZipList [0,1,0]
+parsergb 'b' = pure $ ZipList [0,0,1]
+parsergb _ = empty
+
 parser = do
   P.string "Game "
   i <- uinteger
   P.string ": "
   a <- flip P.sepBy (P.string "; ") $ do
-    flip P.sepBy (P.string ", ") $ do
+    nums <- flip P.sepBy (P.string ", ") $ do
       x <- uinteger
       P.char ' '
       s <- P.munch isLetter
-      let c = read $ take 1 $ fmap toUpper s
-      pure (c :: Colour, x)
-  pure $ Game i $ fmap Map.fromList a
+      let c = head s
+      fmap (x *) <$> parsergb c
+    pure $ fmap sum $ sequenceA nums 
+  pure $ Game i a
 
-type Count = Map Colour Int
 
 zipWithMap f = Map.merge Map.dropMissing Map.dropMissing $ Map.zipWithMatched (const f)
 
 one inp = sum $ fmap gameId $ filter (sat . gameTurns) inp
   where
-    bound = Map.fromList [(R,12),(G,13),(B,14)]
-    sat ms = and $ Map.elems $ zipWithMap (<=) m bound
-      where m = Map.unionsWith max ms
+    bound = [12,13,14]
+    sat ms = and $ liftA2 (<=) m (ZipList bound)
+      where m = maximum <$> sequenceA ms
 
-two :: [Game] -> Integer
-two inp = sum $ fmap (product . Map.elems) $ fmap needed inp
+two inp = sum $ fmap (product) $ fmap needed inp
   where
-    needed row = Map.unionsWith max $ gameTurns row
+    needed row = maximum <$> sequenceA (gameTurns row)
 
 main :: (HasCallStack) => IO ()
 main = do
