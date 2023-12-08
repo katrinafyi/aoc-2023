@@ -182,9 +182,15 @@ fixM :: Monad m => (a -> m a) -> a -> m a
 fixM f = fix (f >=>)
 
 iterateM :: Monad m => (a -> m a) -> a -> [m a]
-iterateM f x = go f (pure x)
+iterateM f x = go (pure x)
   where 
-    go f ma = ma : go f (ma >>= f)
+    go ma = ma : go (ma >>= f)
+
+scanM :: Monad m => (b -> a -> m b) -> b -> [a] -> [m b]
+scanM f b0 as = go (pure b0) as
+  where 
+    go _ [] = []
+    go mb (a:as) = mb : go (mb >>= \b -> f b a) as
 
 firstDupe :: Ord a => Foldable t => t a -> Maybe a
 firstDupe xs = either Just (const Nothing) $ foldM go Set.empty xs
