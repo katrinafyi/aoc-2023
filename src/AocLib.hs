@@ -14,8 +14,10 @@ import Control.Monad
 import Control.Arrow
 import Control.Applicative
 import Text.ParserCombinators.ReadP
-import qualified Data.Graph.Inductive as G
+import qualified Data.Graph.Inductive.PatriciaTree as G
 import Data.String (IsString (..))
+import qualified Data.Graph.Inductive.Graph as G
+import qualified Data.Graph.Inductive.NodeMap as G
 
 dupe :: b -> (b, b)
 dupe x = (x,x)
@@ -109,8 +111,8 @@ instance (Num a, Num b) => Num (a,b) where
   fromInteger x = (fromInteger x,fromInteger x)
 
 type Vec2 = (Integer, Integer)
-rotateLeft (x,y) = (y,-x)
-rotateRight (x,y) = (-y,x)
+rotateLeft (r,c) = (-c,r)
+rotateRight (r,c) = (c,-r)
 
 direction4 :: Num n => [(n, n)]
 direction4 = [(0,1),(0,-1),(1,0),(-1,0)]
@@ -223,9 +225,17 @@ readp p s = case readP_to_S (p <* skipSpaces <* eof) s of
 instance a ~ String => IsString (ReadP a) where
   fromString = string
 
-runGraph :: (G.DynGraph g, Ord a) =>
-  G.NodeMapM a b g r -> (g a b, a -> G.Node)
-runGraph maker = (g, node)
+data Graph a b = Graph { gr :: G.Gr a b, nod :: a -> G.Node, lab :: G.Node -> a }
+
+instance (Show a, Show b) => (Show (Graph a b)) where
+  show (Graph gr _ _) = G.prettify gr
+
+runGraph :: (Ord a) => G.NodeMapM a b G.Gr r -> Graph a b
+runGraph maker = Graph g node label
   where
     (_,(map,g)) = G.run G.empty maker
     node = fst . G.mkNode_ map
+    label = fromJust . G.lab g
+
+mapGraph :: (G.Gr a b -> G.Gr a b) -> Graph a b -> Graph a b
+mapGraph f x = x { gr = f (gr x) }

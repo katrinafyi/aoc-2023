@@ -46,6 +46,7 @@ ghc-options:
 - -Wpartial-fields
 - -Wredundant-constraints
 - -Wno-orphans
+- -fno-ignore-asserts
 
 library:
   source-dirs: src

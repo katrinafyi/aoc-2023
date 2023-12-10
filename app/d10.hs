@@ -2,10 +2,11 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 
 import AocLib
 import Control.Applicative
-import Control.Arrow hiding (second)
+import Control.Arrow hiding (first, second)
 import Control.Monad
 import Control.Monad.Trans.State.Strict
 import Data.Bifunctor
@@ -30,13 +31,15 @@ import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
 import Data.Ord
 import qualified Data.Map.Merge.Strict as Map
+import qualified Data.Graph.Inductive.NodeMap as G
+import qualified Data.Graph.Inductive.PatriciaTree as G
+import qualified Data.Graph.Inductive as G
+import Control.Exception (assert)
 
 type Pipe = Map Vec2 Vec2
-data Data = Data { dataMap :: Map Vec2 Pipe }
-  deriving (Eq, Show)
-
 pipe i o = Map.fromList [(i,o),(o,i)]
 
+pars :: Char -> Pipe
 pars '|' = pipe north south
 pars '-' = pipe east west
 pars 'L' = pipe north east
@@ -45,63 +48,67 @@ pars '7' = pipe west south
 pars 'F' = pipe east south
 pars _ = Map.empty
 
-
-parse raw = (start, startdirs, grid')
+parse :: [Char] -> (Vec2, Graph Vec2 ())
+parse raw = (start, makegraph start grid)
   where
-    lines' = lines raw
-    chars = fmap (second pars) $ concat $ indexed2 lines'
+    coords = concat $ indexed2 $ lines raw
+    chars = second pars <$> coords
     grid = Map.fromList chars
-    Just (start, 'S') = find ((== 'S') . snd)$ concat $ indexed2 lines'
 
-    hasincoming pos dir = maybe False (Map.member (-dir)) $ grid !? (pos + dir)
-    startdirs = filter (hasincoming start) direction4
-    startpipe = uncurry pipe $ exactly2 startdirs
+    Just (start, 'S') = find ((== 'S') . snd) coords
 
-    grid' = Map.insert start startpipe grid
+fixstart start g =
+  g { gr = G.insEdges (rev <$> G.inn g.gr (g.nod start)) g.gr }
+  where rev (a,b,c) = (b,a,c)
 
+makegraph start grid = fixstart start $ runGraph $ do
+  let poss = Map.keys grid
+  void $ G.insMapNodesM poss
+  --  adjs :: Vec2 -> [(Vec2, ())]
+  let adjs pos = ((+pos) &&& const ()) <$> Map.elems (grid ! pos)
+  forM_ poss $ \p -> do
+    let adjpos = fst <$> adjs p
+    when (all (`Map.member` grid) adjpos) $
+      G.insMapEdgesM $ uncurry (p,,) <$> adjs p
 
-go _ seen Empty = seen
-go grid seen ((pos,dir,n):<|rest)
-  | pos `Map.member` seen = seen
-  | otherwise = go grid seen' (rest :|> (pos',dir',n+1))
-    where
-      seen' = Map.insert pos (n,dir) seen
-      pos' = pos + dir
-      dir' = (grid ! pos') ! (-dir)
-
-zipWithMap f = Map.merge Map.dropMissing Map.dropMissing $ Map.zipWithMatched (const f)
-
-one (start, startdirs, grid) = ("equal at", result, "with distance", d0 ! result)
+-- PART ONE
+one (start, g@Graph{}) = last $ fmap (first g.lab) dists
   where
-    d0,d1 :: Map Vec2 Int
-    [d0,d1] = map (\s -> Map.map fst $ go grid Map.empty [(start, s, 0)]) startdirs
+    dists = G.level (g.nod start) g.gr
 
-    equals = filterKeys (/= start) $ Map.filter id $ zipWithMap (==) d0 d1
-    result = head $ Map.keys equals
-
-flood grid seen pos
-  | pos `Map.member` seen = seen
-  | grid ! pos /= Map.empty = Map.insert pos False seen
-  | otherwise = traceShow pos' seen'
-    where
-      floodto x = (Map.empty ==) $ grid ! x
-      pos' = filter floodto $ adjacent4 pos
-
-      seen' = foldr (flip $ flood grid) (Map.insert pos True seen) pos'
-
-two (start, startdirs, grid) = (insides, Map.size $ Map.filter id flooded)
+-- PART TWO
+two (start, g@Graph{}) = assert (all inbound flooded) $ Set.size flooded
   where
-    startdir = head startdirs
-    border = Map.map snd $ go grid Map.empty [(start, startdir, 0)]
+    poss = Set.fromList (g.lab <$> G.nodes g.gr)
+    inbound = all @[] (`Set.member` poss) . adjacent4
 
-    -- XXX: use rotateRight or rotateLeft that doesn't crash
-    insides = (\(pos,d) -> pos + rotateRight d) <$> Map.toList border
+    border = g.lab <$> G.dfs [g.nod start] g.gr
+    deltas = zipWith (-) (tail border) border
+    rotated = Set.fromList
+      $ zipWith (+) (tail border) (fmap rotateRight deltas)
 
-    flooded = foldr (flip (flood grid)) Map.empty insides
+    insidestarts = Set.filter (not . (`elem` border)) rotated
+
+    g' = makeinner g (Set.fromList border)
+
+    flood pos = Set.map g'.lab
+      $ Set.fromList 
+      $ G.dfs [g'.nod pos] g'.gr
+
+    flooded = Set.unions $ Set.map flood insidestarts
+
+makeinner g@Graph{} border = runGraph $ do
+  let poss = Set.fromList (g.lab <$> G.nodes g.gr) Set.\\ border
+  void $ G.insMapNodesM $ toList poss
+
+  forM_ poss $ \p -> do
+    G.insMapEdgesM $ (p,,()) <$> filter (`Set.member` poss) (adjacent4 p)
+
 
 main :: HasCallStack => IO ()
 main = do
   inp <- parse <$> getContents
   print $ inp
+  print $ snd inp
   print $ one inp
   print $ two inp
