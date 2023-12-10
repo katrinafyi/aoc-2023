@@ -37,6 +37,7 @@ library
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , astar
     , base >=4.7 && <5
     , containers
@@ -61,6 +62,7 @@ executable aoc-exe
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -82,6 +84,7 @@ executable d00
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -103,6 +106,7 @@ executable d01
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -124,6 +128,7 @@ executable d02
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -145,6 +150,7 @@ executable d03
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -166,6 +172,7 @@ executable d04
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -187,6 +194,7 @@ executable d05
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -208,6 +216,7 @@ executable d06
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -229,6 +238,7 @@ executable d07
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -250,6 +260,7 @@ executable d08
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -271,6 +282,7 @@ executable d09
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -292,6 +304,7 @@ executable d10
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -313,6 +326,7 @@ executable d11
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -334,6 +348,7 @@ executable d12
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -355,6 +370,7 @@ executable d13
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -376,6 +392,7 @@ executable d14
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -397,6 +414,7 @@ executable d15
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -418,6 +436,7 @@ executable d16
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -439,6 +458,7 @@ executable d17
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -460,6 +480,7 @@ executable d18
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -481,6 +502,7 @@ executable d19
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -502,6 +524,7 @@ executable d20
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -523,6 +546,7 @@ executable d21
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -544,6 +568,7 @@ executable d22
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -565,6 +590,7 @@ executable d23
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -586,6 +612,7 @@ executable d24
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -607,6 +634,7 @@ executable d25
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -628,6 +656,7 @@ executable y2019d24
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5
@@ -654,6 +683,7 @@ test-suite aoc-test
   build-depends:
       IntervalMap
     , MemoTrie
+    , algebraic-graphs
     , aoc
     , astar
     , base >=4.7 && <5

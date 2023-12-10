@@ -118,6 +118,12 @@ direction4 = [(0,1),(0,-1),(1,0),(-1,0)]
 direction8 :: Num n => [(n, n)]
 direction8 = direction4 ++ [(1,1),(1,-1),(-1,1),(-1,-1)]
 
+north, south, east, west :: Num n => (n,n)
+north = (-1,0)
+south = -north
+east = (0,1)
+west = -east
+
 adjacent4 pos = (+ pos) <$> direction4
 adjacent8 pos = (+ pos) <$> direction8
 

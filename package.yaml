@@ -32,6 +32,7 @@ dependencies:
 - text
 - parallel
 - IntervalMap
+- algebraic-graphs
 
 ghc-options:
 - -O3
