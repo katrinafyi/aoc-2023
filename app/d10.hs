@@ -83,11 +83,14 @@ two (start, g@Graph{}) = assert (all inbound flooded) $ Set.size flooded
     inbound = all @[] (`Set.member` poss) . adjacent4
 
     border = g.lab <$> G.dfs [g.nod start] g.gr
+    border' = Set.fromList border
     deltas = zipWith (-) (tail border) border
-    rotated = Set.fromList
-      $ zipWith (+) (tail border) (fmap rotateRight deltas)
+    -- XXX change rotate if assertion fails.
+    rotate ns = Set.fromList $ zipWith (+) ns (fmap rotateRight deltas)
+    -- XXX: >:(
+    rotated = rotate border `Set.union` rotate (tail border) 
 
-    insidestarts = Set.filter (not . (`elem` border)) rotated
+    insidestarts = Set.filter (not . (`Set.member` border')) rotated
 
     g' = makeinner g (Set.fromList border)
 
