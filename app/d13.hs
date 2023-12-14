@@ -65,9 +65,9 @@ mirrorfold grid n = zipWithMap (==) grid grid'
 
 isfold grid = not (null grid) && and grid
 
-almostfold grid = 1 == sum (Map.map (fromEnum . not) grid)
+almostfold grid = 2 == sum (Map.map (fromEnum . not) grid)
 
-solve p grid = find (p . snd) (mapKeyed (mirrorfold grid) [0..maxrow])
+solve p grid = find (p . snd) $ fmap (id &&& mirrorfold grid) [0..maxrow]
   where
     Just ((maxrow,_),_) = Map.lookupMax grid
 
