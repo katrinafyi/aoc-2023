@@ -28,8 +28,12 @@ import GHC.Stack (HasCallStack)
 import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
 import Data.Ord
+import qualified Data.Map.Merge.Strict as Map
 
-parse = paragraphs . lines
+parse = fmap pars . paragraphs . lines
+  where
+    pars :: [String] -> Map Vec2 Bool
+    pars = Map.fromList . concat . indexed2 . fmap (fmap (== '#'))
 
 equivalenceclasses :: (Ord a, Functor f, Foldable f) => f a -> f Integer
 equivalenceclasses xs = fmap (mapping !) xs
@@ -44,21 +48,38 @@ zippers xs = go (xs) []
     go (x:xs) ys = (x:xs, ys) : go xs (x:ys)
     go xs ys = [(xs,ys)]
 
-solve grid = fmap fst $ find (go . snd) $ indexed $ zippers grid
-  where
-    go ([],_) = False
-    go (_,[]) = False
-    go (before,after) = and (zipWith (==) before after)
+butheadlast = tail . init
 
-go grid = eitherA (solve grid) (solve (transpose grid))
+-- n is number of rows before mirror.
+mirror grid n = Map.mapKeys k grid
+  where
+    k (r,c) = (-r + 2 * n + 1, c)
+    Just ((maxrow,_),_) = Map.lookupMax grid
+
+
+zipWithMap f = Map.merge Map.dropMissing Map.dropMissing $ Map.zipWithMatched (const f)
+
+mirrorfold grid n = zipWithMap (==) grid grid'
+  where
+    grid' = mirror grid n
+
+isfold grid = not (null grid) && and grid
+
+almostfold grid = 1 == sum (Map.map (fromEnum . not) grid)
+
+solve p grid = find (p . snd) (mapKeyed (mirrorfold grid) [0..maxrow])
+  where
+    Just ((maxrow,_),_) = Map.lookupMax grid
+
+solve1 grid = eitherA (s grid) (s (Map.mapKeys swap grid))
+  where s = fmap fst . solve isfold
 
 summarise = either (* 100) id
 
-one inp = traverse go inp'
-  where
-    inp' = fmap (fmap equivalenceclasses) inp
+one inp = sum . fmap summarise <$> traverse solve1 inp
 
-two inp = 1
+two inp = solve almostfold $ (Map.mapKeys id $ head inp)
+
 
 
 main :: HasCallStack => IO ()
