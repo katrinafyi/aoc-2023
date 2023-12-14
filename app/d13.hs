@@ -4,7 +4,7 @@
 
 import AocLib
 import Control.Applicative
-import Control.Arrow
+import Control.Arrow hiding (second)
 import Control.Monad
 import Control.Monad.Trans.State.Strict
 import Data.Bifunctor
@@ -29,29 +29,35 @@ import Text.ParserCombinators.ReadP
 import qualified Text.ParserCombinators.ReadP as P
 import Data.Ord
 
-pars = map (== '#')
-
 parse = paragraphs . lines
 
 equivalenceclasses :: (Ord a, Functor f, Foldable f) => f a -> f Integer
 equivalenceclasses xs = fmap (mapping !) xs
-  where 
+  where
     mapping = snd $ foldr go (0, Map.empty) xs
     go val (n, map)
       | val `Map.member` map = (n, map)
       | otherwise =  (n+1, Map.insert val n map)
 
-solve grid = (reverse $ fmap swap before, tail after)
-  -- | null after = mempty
-  -- | ismirror = [length before]
-  -- | otherwise = mempty
+zippers xs = go (xs) []
   where
-    (before, after) = break (uncurry (==)) $ sliding2 grid
-    ismirror = and $ zipWith (==) (reverse $ fmap swap before) (drop 1 after)
+    go (x:xs) ys = (x:xs, ys) : go xs (x:ys)
+    go xs ys = [(xs,ys)]
 
--- solveboth grid = eitherA (solve grid) (solve (transpose grid))
+solve grid = fmap fst $ find (go . snd) $ indexed $ zippers grid
+  where
+    go ([],_) = False
+    go (_,[]) = False
+    go (before,after) = and (zipWith (==) before after)
 
-one inp = map solve $ map equivalenceclasses $ map transpose $ inp
+go grid = eitherA (solve grid) (solve (transpose grid))
+
+summarise = either (* 100) id
+
+one inp = traverse go inp'
+  where
+    inp' = fmap (fmap equivalenceclasses) inp
+
 two inp = 1
 
 
@@ -61,3 +67,4 @@ main = do
   print $ inp
   print $ one inp
   print $ two inp
+
